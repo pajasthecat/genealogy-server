@@ -9,7 +9,7 @@ In this app I am using CQRS and mediator pattern by using the [MediatR](https://
 
 ## Db - Neo4j
 
-Since the relationship between the enteties are as important as the enteties themself I thought this poject could be a good time to try a graph database. The choice fel on Neo4j.
+Since the relationship between the enteties are as important as the enteties themself I thought this poject could be a good time to try a graph database. The choice fell on Neo4j.
 
 ### To get a local instance, do the steps below.
 
