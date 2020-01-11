@@ -22,6 +22,11 @@ namespace Geneology.Infrastructure.Repositories.Cache
             return await _familyMembersRepository.AddFamilyMemberAsync(familyMember);
         }
 
+        public async Task AddRelationshipsAsync(FamilyMember familyMember, Dictionary<Guid, Relationships> relationships)
+        {
+            await _familyMembersRepository.AddRelationshipsAsync(familyMember, relationships);
+        }
+
         public FamilyMember GetFamilyMemberById(Guid id)
         {
             if (_cachedFamilyMembers.ContainsKey(id)) return _cachedFamilyMembers[id];

@@ -24,11 +24,24 @@ namespace Geneology.Infrastructure.Repositories
             .WithParam("familyMember", familyMember)
             .ExecuteWithoutResultsAsync();
 
-            return new FamilyMember(
-                familyMember.Id,
-                familyMember.Name,
-                familyMember.Birth,
-                familyMember.Death);
+            return familyMember;
+        }
+
+        public async Task AddRelationshipsAsync(FamilyMember familyMember, Dictionary<Guid, Relationships> relationships)
+        {
+            foreach (var relationship in relationships)
+            {
+                var relativeId = relationship.Key.ToString();
+                var relativeName = relationship.Value.ToString();
+
+                await _client
+                .Cypher
+                .Match("(relative:FamilyMember), (related:FamilyMember)")
+                .Where((FamilyMember relative) => relative.Id == relativeId)
+                .AndWhere((FamilyMember related) => related.Id == familyMember.Id)
+                .Create($"(relative)-[:{relativeName}]->(related)")
+                .ExecuteWithoutResultsAsync();
+            }
         }
 
         public FamilyMember GetFamilyMemberById(Guid id)
@@ -36,20 +49,18 @@ namespace Geneology.Infrastructure.Repositories
             return _client
            .Cypher
            .Match("(familyMember:FamilyMember)")
-           .Where((FamilyMember familyMember) => familyMember.Id == id)
+           .Where((FamilyMember familyMember) => familyMember.Id == id.ToString())
            .Return(familyMember => familyMember.As<FamilyMember>())
            .Results.FirstOrDefault();
         }
 
         public IEnumerable<FamilyMember> GetFamilyMembers()
         {
-            var familyMembers = _client
+            return _client
            .Cypher
            .Match("(familyMember:FamilyMember)")
            .Return(familyMember => familyMember.As<FamilyMember>())
            .Results;
-
-            return familyMembers;
         }
     }
 }

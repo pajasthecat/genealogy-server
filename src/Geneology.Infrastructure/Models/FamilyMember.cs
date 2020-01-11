@@ -7,26 +7,27 @@ namespace Geneology.Infrastructure.Models
         public FamilyMember()
         { }
 
-        public FamilyMember(string name, DateTime birth, DateTime? death)
-        {
-            Id = Guid.NewGuid();
-            Name = name;
-            Birth = birth;
-            Death = death;
-        }
-
-        public FamilyMember(Guid id, string name, DateTime birth, DateTime? death)
+        public FamilyMember(
+             string id,
+             string firstname,
+             string lastname,
+             DateTime birth,
+             DateTime? death,
+             string congregation)
         {
             Id = id;
-            Name = name;
-            Birth = birth;
-            Death = death;
-
+            BirthDate = birth;
+            DeathDate = death;
+            Firstname = firstname;
+            Lastname = lastname;
+            Congregation = congregation;
         }
 
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public DateTime Birth { get; set; }
-        public DateTime? Death { get; set; }
+        public string Id { get; set; }
+        public string Firstname { get; set; }
+        public string Lastname { get; set; }
+        public DateTime BirthDate { get; set; }
+        public DateTime? DeathDate { get; set; }
+        public string Congregation { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Geneology.Infrastructure\Geneology.Infrastructure.csproj" />
+    <ProjectReference Include="..\Genealogy.Application\Genealogy.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

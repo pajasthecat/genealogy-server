@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Geneology.Api.Models.Responses;
@@ -15,16 +16,18 @@ namespace Geneology.Api.Handlers.QueryHandlers
         {
             this._familyMembersRepository = familyMemberRepository;
         }
-        public async Task<GetFamilyMemberResponse> Handle(GetFamilyMemberByIdQuery request, CancellationToken cancellationToken)
+        public Task<GetFamilyMemberResponse> Handle(GetFamilyMemberByIdQuery request, CancellationToken cancellationToken)
         {
             var result = _familyMembersRepository.GetFamilyMemberById(request.Id);
             if (result == null) return null;
-
-            return new GetFamilyMemberResponse(
-                result.Id.ToString(),
-                result.Name,
-                result.Birth,
-                result.Death);
+            return Task.FromResult(
+                new GetFamilyMemberResponse(
+                Guid.Parse(result.Id),
+                result.Firstname,
+                result.Lastname,
+                result.BirthDate,
+                result.DeathDate,
+                result.Congregation));
         }
     }
 }

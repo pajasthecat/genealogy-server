@@ -4,17 +4,30 @@ namespace Geneology.Api.Models.Responses
 {
     public class GetFamilyMemberResponse
     {
-        public GetFamilyMemberResponse(string id, string name, DateTime birthDate, DateTime? deathDate)
+        public GetFamilyMemberResponse(
+             Guid id,
+             string firstname,
+             string lastname,
+             DateTime birth,
+             DateTime? death,
+             string congregation)
         {
             Id = id;
-            Name = name;
-            BirthDate = birthDate;
-            DeathDate = deathDate;
+            BirthDate = birth;
+            DeathDate = death;
+            Firstname = firstname;
+            Lastname = lastname;
+            Congregation = congregation;
         }
 
-        public string Id { get; }
-        public string Name { get; }
-        public DateTime BirthDate { get; }
-        public DateTime? DeathDate { get; }
+        public Guid Id { get; set; }
+        public string Firstname { get; set; }
+        public string Lastname { get; set; }
+
+        public DateTime BirthDate { get; set; }
+
+        public DateTime? DeathDate { get; set; }
+
+        public string Congregation { get; set; }
     }
 }

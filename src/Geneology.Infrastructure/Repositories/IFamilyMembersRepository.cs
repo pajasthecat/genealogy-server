@@ -10,5 +10,6 @@ namespace Geneology.Infrastructure.Repositories
         FamilyMember GetFamilyMemberById(Guid id);
         IEnumerable<FamilyMember> GetFamilyMembers();
         Task<FamilyMember> AddFamilyMemberAsync(FamilyMember familyMember);
+        Task AddRelationshipsAsync(FamilyMember familymember, Dictionary<Guid, Relationships> relationships);
     }
 }

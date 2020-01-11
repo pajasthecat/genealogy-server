@@ -36,7 +36,6 @@ namespace Geneology.Api
                 options.Authority = Configuration["Auth0:Domain"];
                 options.Audience = Configuration["Auth0:Audience"];
             });
-
             services.AddSingleton<IFamilyMembersRepository, FamilyMembersRepository>();
             services.Decorate<IFamilyMembersRepository, CachedFamilyMembersRepository>();
             services.AddValidatorsFromAssembly(typeof(Startup).Assembly);

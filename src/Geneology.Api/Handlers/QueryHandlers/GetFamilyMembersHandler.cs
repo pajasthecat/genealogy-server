@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -17,16 +18,20 @@ namespace Geneology.Api.Handlers.QueryHandlers
         {
             _familyMembersRepository = familyMembersRepository;
         }
-        
-        public async Task<List<GetFamilyMemberResponse>> Handle(GetFamilyMembersQuery request, CancellationToken cancellationToken)
-        {
-            var result = _familyMembersRepository.GetFamilyMembers();
 
-            return result.Select(r => new GetFamilyMemberResponse(
-               r.Id.ToString(),
-               r.Name,
-               r.Birth,
-               r.Death)).ToList();
+        public Task<List<GetFamilyMemberResponse>> Handle(GetFamilyMembersQuery request, CancellationToken cancellationToken)
+        {
+            var results = _familyMembersRepository.GetFamilyMembers();
+
+            return Task.FromResult(
+                results.Select(res =>
+                new GetFamilyMemberResponse(
+                    Guid.Parse(res.Id),
+                    res.Firstname,
+                    res.Lastname,
+                    res.BirthDate,
+                    res.DeathDate,
+                    res.Congregation)).ToList());
         }
     }
 }

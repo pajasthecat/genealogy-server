@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Geneology.Api.Commands;
 using Geneology.Api.Models.Contracts;
@@ -40,7 +41,17 @@ namespace Geneology.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddFamilyMember([FromBody] AddFamilyMemberRequest request)
         {
-            var command = new AddFamilyMemberCommand(request.Name, request.BirthDate, request.DeathDate);
+            var command = new AddFamilyMemberCommand(
+                request.Firstname,
+                request.Lastname,
+                 request.BirthDate,
+                 request.DeathDate,
+                 request.Congregation,
+                 request.Relationships == null
+                 ? null
+                 : request.Relationships.ToDictionary(
+                     rel => Guid.Parse(rel.Key),
+                     rel => (Relationships)Enum.Parse(typeof(Relationships), rel.Value)));
             var result = await _mediator.Send(command);
             return Ok(result);
         }

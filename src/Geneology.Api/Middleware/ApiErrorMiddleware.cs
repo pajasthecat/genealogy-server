@@ -9,11 +9,11 @@ using Newtonsoft.Json;
 namespace Geneology.Api.Middleware
 {
     //https://stackoverflow.com/questions/54104138/mediatr-fluent-validation-response-from-pipeline-behavior
-    public class ErrorHandlingMiddleware
+    public class ApiErrorMiddleware
     {
         private readonly RequestDelegate _next;
 
-        public ErrorHandlingMiddleware(RequestDelegate next)
+        public ApiErrorMiddleware(RequestDelegate next)
         {
             _next = next;
         }
@@ -30,22 +30,21 @@ namespace Geneology.Api.Middleware
             }
         }
 
-        private Task HandleExceptionAsync(HttpContext context, Exception ex)
+        private Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            switch (ex)
+            return exception switch
             {
-                case ValidationException validationException:
-                    return AddToContext(
+                ValidationException validationException =>
+                AddToContext(
                        context,
                        HttpStatusCode.BadRequest,
-                       validationException.Errors.Select(x => new { x.PropertyName, x.ErrorMessage }));
-
-                default:
-                    return AddToContext(
+                       validationException.Errors.Select(x => new { x.PropertyName, x.ErrorMessage })),
+                _ => AddToContext(
                         context,
                         HttpStatusCode.InternalServerError,
-                       new { isSuccess = false, error = ex.Message });
-            }
+                       new { isSuccess = false, error = exception.Message })
+
+            };
         }
 
         private Task AddToContext(HttpContext context, HttpStatusCode code, object objecToSerialize)

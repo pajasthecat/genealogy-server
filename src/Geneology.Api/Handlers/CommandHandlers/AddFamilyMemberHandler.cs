@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Geneology.Api.Commands;
@@ -21,15 +23,33 @@ namespace Geneology.Api.Handlers.CommandHandlers
         {
             var result = await _familyMembersRepository.AddFamilyMemberAsync(
                 new FamilyMember(
-                    request.Name,
+                    Guid.NewGuid().ToString(),
+                    request.Firstname,
+                    request.Lastname,
                     request.BirthDate,
-                    request.DeathDate));
+                    request.DeathDate,
+                    request.Congregation));
+
+            if (request.Relationships != null)
+                await _familyMembersRepository.AddRelationshipsAsync(
+                    new FamilyMember(
+                        result.Id,
+                        request.Firstname,
+                        request.Lastname,
+                        request.BirthDate,
+                        request.DeathDate,
+                        request.Congregation),
+                    request.Relationships.ToDictionary(
+                    rel => rel.Key,
+                    rel => (Relationships)Enum.Parse(typeof(Relationships), rel.Value.ToString())));
 
             return new GetFamilyMemberResponse(
-                 result.Id.ToString(),
-                 result.Name,
-                 result.Birth,
-                 result.Death);
+                Guid.Parse(result.Id),
+                result.Firstname,
+                result.Lastname,
+                result.BirthDate,
+                result.DeathDate,
+                result.Congregation);
         }
     }
 }
