@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Geneology.Infrastructure.Models;
+using Genealogy.Application.Models;
 
-namespace Geneology.Infrastructure.Repositories
+namespace Genealogy.Application.Repositories
 {
     public interface IFamilyMembersRepository
     {

@@ -1,4 +1,4 @@
-namespace Geneology.Infrastructure.Models
+namespace Geneology.Infrastructure.Dto
 {
     public enum Relationships
     {

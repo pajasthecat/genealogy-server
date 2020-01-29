@@ -2,7 +2,8 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Geneology.Infrastructure.Models;
+using Genealogy.Application.Models;
+using Genealogy.Application.Repositories;
 
 namespace Geneology.Infrastructure.Repositories.Cache
 {
@@ -17,7 +18,7 @@ namespace Geneology.Infrastructure.Repositories.Cache
             _familyMembersRepository = familyMembersRepository;
         }
 
-        public async Task<FamilyMember> AddFamilyMemberAsync(FamilyMember familyMember)
+        public async Task<Genealogy.Application.Models.FamilyMember> AddFamilyMemberAsync(Genealogy.Application.Models.FamilyMember familyMember)
         {
             return await _familyMembersRepository.AddFamilyMemberAsync(familyMember);
         }

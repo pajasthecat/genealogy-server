@@ -1,10 +1,10 @@
 using System;
-using Geneology.Api.Models.Responses;
+using Genealogy.Application.Models;
 using MediatR;
 
-namespace Geneology.Api.Queries
+namespace Genealogy.Application.Queries
 {
-    public class GetFamilyMemberByIdQuery : IRequest<GetFamilyMemberResponse>
+    public class GetFamilyMemberByIdQuery : IRequest<FamilyMember>
     {
         public Guid Id { get; }
         public GetFamilyMemberByIdQuery(Guid id)

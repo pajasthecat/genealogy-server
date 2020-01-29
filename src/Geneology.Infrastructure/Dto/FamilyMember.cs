@@ -1,6 +1,6 @@
 using System;
 
-namespace Geneology.Infrastructure.Models
+namespace Geneology.Infrastructure.Dto
 {
     public class FamilyMember
     {

@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Geneology.Api.Commands;
+using Genealogy.Application.Commands;
+using Genealogy.Application.Queries;
 using Geneology.Api.Models.Contracts;
-using Geneology.Api.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -51,7 +51,7 @@ namespace Geneology.Api.Controllers
                  ? null
                  : request.Relationships.ToDictionary(
                      rel => Guid.Parse(rel.Key),
-                     rel => (Relationships)Enum.Parse(typeof(Relationships), rel.Value)));
+                     rel => (Genealogy.Application.Models.Relationships)Enum.Parse(typeof(Genealogy.Application.Models.Relationships), rel.Value)));
             var result = await _mediator.Send(command);
             return Ok(result);
         }
