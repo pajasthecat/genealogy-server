@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
-using Geneology.Api.Models.Contracts;
-using Geneology.Api.Models.Responses;
+using Genealogy.Application.Models;
 using MediatR;
 
-namespace Geneology.Api.Commands
+namespace Genealogy.Application.Commands
 {
-    public class AddFamilyMemberCommand : IRequest<GetFamilyMemberResponse>
+    public class AddFamilyMemberCommand : IRequest<FamilyMember>
     {
         public AddFamilyMemberCommand(
             string firstname,

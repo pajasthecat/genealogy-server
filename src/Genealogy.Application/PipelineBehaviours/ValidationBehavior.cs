@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
 
-namespace Geneology.Api.PipelineBehaviors
+namespace Genealogy.Application.PipelineBehaviors
 {
     public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
     {
@@ -19,13 +19,13 @@ namespace Geneology.Api.PipelineBehaviors
         public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
             var context = new ValidationContext(request);
+
             var failures = _validator
             .Select(x => x.Validate(context))
             .SelectMany(x => x.Errors)
             .Where(x => x != null).ToList();
 
-            if(failures.Any()) throw new ValidationException(failures);
-
+            if (failures.Any()) throw new ValidationException(failures);
             return next();
         }
     }

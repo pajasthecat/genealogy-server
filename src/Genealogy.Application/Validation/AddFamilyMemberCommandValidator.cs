@@ -1,8 +1,8 @@
 using System;
 using FluentValidation;
-using Geneology.Api.Commands;
+using Genealogy.Application.Commands;
 
-namespace Geneology.Api.Validation
+namespace Genealogy.Application.Validation
 {
     public class AddFamilyMemberValidator : AbstractValidator<AddFamilyMemberCommand>
     {

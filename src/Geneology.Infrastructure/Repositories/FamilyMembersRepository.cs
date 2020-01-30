@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Geneology.Infrastructure.Models;
+using Genealogy.Application.Models;
+using Genealogy.Application.Repositories;
 using Neo4jClient;
 
 namespace Geneology.Infrastructure.Repositories
@@ -29,6 +30,14 @@ namespace Geneology.Infrastructure.Repositories
 
         public async Task AddRelationshipsAsync(FamilyMember familyMember, Dictionary<Guid, Relationships> relationships)
         {
+            var dtoFamilyMember = new Dto.FamilyMember(
+                familyMember.Id.ToString(),
+                familyMember.Firstname,
+                familyMember.Lastname,
+                familyMember.BirthDate,
+                familyMember.DeathDate,
+                familyMember.Congregation);
+
             foreach (var relationship in relationships)
             {
                 var relativeId = relationship.Key.ToString();
@@ -37,8 +46,8 @@ namespace Geneology.Infrastructure.Repositories
                 await _client
                 .Cypher
                 .Match("(relative:FamilyMember), (related:FamilyMember)")
-                .Where((FamilyMember relative) => relative.Id == relativeId)
-                .AndWhere((FamilyMember related) => related.Id == familyMember.Id)
+                .Where((Dto.FamilyMember relative) => relative.Id == relativeId)
+                .AndWhere((Dto.FamilyMember related) => related.Id == dtoFamilyMember.Id)
                 .Create($"(relative)-[:{relativeName}]->(related)")
                 .ExecuteWithoutResultsAsync();
             }
@@ -46,21 +55,40 @@ namespace Geneology.Infrastructure.Repositories
 
         public FamilyMember GetFamilyMemberById(Guid id)
         {
-            return _client
+            var result = _client
            .Cypher
            .Match("(familyMember:FamilyMember)")
-           .Where((FamilyMember familyMember) => familyMember.Id == id.ToString())
-           .Return(familyMember => familyMember.As<FamilyMember>())
+           .Where((Dto.FamilyMember familyMember) => familyMember.Id == id.ToString())
+           .Return(familyMember => familyMember.As<Dto.FamilyMember>())
            .Results.FirstOrDefault();
+
+            return result == null
+            ? null
+            : new FamilyMember(
+                 new Guid(result.Id),
+                 result.Firstname,
+                 result.Lastname,
+                 result.BirthDate,
+                 result.DeathDate,
+                 result.Congregation);
         }
 
         public IEnumerable<FamilyMember> GetFamilyMembers()
         {
-            return _client
+            var result = _client
            .Cypher
            .Match("(familyMember:FamilyMember)")
-           .Return(familyMember => familyMember.As<FamilyMember>())
+           .Return(familyMember => familyMember.As<Dto.FamilyMember>())
            .Results;
+
+            return result
+            .Select(r => new FamilyMember(
+                new Guid(r.Id),
+                r.Firstname,
+                r.Lastname,
+                r.BirthDate,
+                r.DeathDate,
+                r.Congregation));
         }
     }
 }

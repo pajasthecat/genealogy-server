@@ -1,16 +1,15 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Geneology.Api.Models.Responses;
-using Geneology.Api.Queries;
-using Geneology.Infrastructure.Repositories;
+using Genealogy.Application.Models;
+using Genealogy.Application.Queries;
+using Genealogy.Application.Repositories;
 using MediatR;
 
-namespace Geneology.Api.Handlers.QueryHandlers
+namespace Genealogy.Application.Handlers.QueryHandlers
 {
-    public class GetFamilyMembersHandler : IRequestHandler<GetFamilyMembersQuery, List<GetFamilyMemberResponse>>
+    public class GetFamilyMembersHandler : IRequestHandler<GetFamilyMembersQuery, List<FamilyMember>>
     {
         private readonly IFamilyMembersRepository _familyMembersRepository;
 
@@ -19,14 +18,14 @@ namespace Geneology.Api.Handlers.QueryHandlers
             _familyMembersRepository = familyMembersRepository;
         }
 
-        public Task<List<GetFamilyMemberResponse>> Handle(GetFamilyMembersQuery request, CancellationToken cancellationToken)
+        public Task<List<FamilyMember>> Handle(GetFamilyMembersQuery request, CancellationToken cancellationToken)
         {
             var results = _familyMembersRepository.GetFamilyMembers();
 
             return Task.FromResult(
                 results.Select(res =>
-                new GetFamilyMemberResponse(
-                    Guid.Parse(res.Id),
+                new FamilyMember(
+                    res.Id,
                     res.Firstname,
                     res.Lastname,
                     res.BirthDate,

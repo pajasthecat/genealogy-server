@@ -5,13 +5,17 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MediatR;
-using Geneology.Api.PipelineBehaviors;
 using Geneology.Api.Middleware;
 using Neo4jClient;
 using System;
 using FluentValidation;
 using Geneology.Infrastructure.Repositories.Cache;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Genealogy.Application.Repositories;
+using Genealogy.Application.PipelineBehaviors;
+using Genealogy.Application.Handlers.CommandHandlers;
+using Genealogy.Application.Handlers.QueryHandlers;
+using System.Reflection;
 
 namespace Geneology.Api
 {
@@ -38,9 +42,13 @@ namespace Geneology.Api
             });
             services.AddSingleton<IFamilyMembersRepository, FamilyMembersRepository>();
             services.Decorate<IFamilyMembersRepository, CachedFamilyMembersRepository>();
-            services.AddValidatorsFromAssembly(typeof(Startup).Assembly);
+            services.AddMediatR(
+                typeof(AddFamilyMemberHandler).GetTypeInfo().Assembly,
+                typeof(GetFamilyMembersHandler).GetTypeInfo().Assembly,
+                typeof(GetFamilyMemberByIdHandler).GetTypeInfo().Assembly);
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-            services.AddMediatR(typeof(Startup));
+            services.AddValidatorsFromAssembly(typeof(Startup).Assembly);
+
             services.AddSingleton<IGraphClient>(context =>
             {
                 var graphClient = new GraphClient(
